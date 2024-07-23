@@ -1,18 +1,23 @@
-const express = require("express");
-const fs = require("fs");
-const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+// Group 7 Members:
 
+// 1. Hettiarachchi, Rithika Dinethmin
+// 2. Batheegama Gammacharige, Kasun Nirmala
+
+const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
+const fs = require("fs");
+let XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
-// Read URL from urls.txt
-const url = fs.readFileSync("urls.txt", "utf8").trim();
+var url;
 
-// Define and invoke getJSON function (IIFE)
-const getJSON = ((url) => {
+url = fs.readFileSync("urls.txt", "utf8").trim();
+app.use(express.static("public"));
+
+var getJSON = ((url) => {
   return new Promise((resolve, reject) => {
-    const req = new XMLHttpRequest();
-    req.onload = () => {
+    let req = new XMLHttpRequest();
+    req.onload = function () {
       if (req.status === 200) {
         resolve(req.responseText);
       } else {
@@ -20,8 +25,8 @@ const getJSON = ((url) => {
       }
     };
 
-    req.onerror = () => {
-      reject("Network error");
+    req.onerror = function () {
+      reject("network error");
     };
 
     req.open("GET", url);
@@ -33,16 +38,15 @@ app.get("/", (req, res) => {
   getJSON
     .then((data) => {
       fs.writeFileSync("JSON.txt", data);
-      const successMessage = "JSON data saved to file";
-      console.log(successMessage);
-      res.send(successMessage);
+      console.log("JSON data saved to file");
+      res.send("JSON data saved to file");
     })
     .catch((err) => {
-      console.error(err);
-      res.status(500).send("Error retrieving JSON data: " + err);
+      console.log(err);
+      res.send(err);
     });
 });
 
 app.listen(port, () => {
-  console.log(`App running on port ${port}`);
+  console.log(`app running on port ${port}`);
 });
