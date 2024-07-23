@@ -1,0 +1,1 @@
+https://statsapi.mlb.com/api/v1/schedule/games/?sportId=1&startDate=2023-07-07&endDate=2023-07-07
