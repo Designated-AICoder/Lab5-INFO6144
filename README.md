@@ -14,7 +14,7 @@ This lab project creates a simple Node.js website that reads a URL from a text f
 1. **Clone the repository:**
 
    ```sh
-   git clone https://github.com/your-username/Lab5-INFO6144.git
+   git clone https://github.com/Designated-AICoder/Lab5-INFO6144.git
    cd Lab5-INFO6144
    ```
 
