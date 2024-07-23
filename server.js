@@ -1,18 +1,18 @@
 const express = require("express");
+const fs = require("fs");
+const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+
 const app = express();
 const port = process.env.PORT || 3000;
-const fs = require("fs");
-let XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
-var url;
+// Read URL from urls.txt
+const url = fs.readFileSync("urls.txt", "utf8").trim();
 
-url = fs.readFileSync("urls.txt", "utf8").trim();
-app.use(express.static("public"));
-
-var getJSON = ((url) => {
+// Define and invoke getJSON function (IIFE)
+const getJSON = ((url) => {
   return new Promise((resolve, reject) => {
-    let req = new XMLHttpRequest();
-    req.onload = function () {
+    const req = new XMLHttpRequest();
+    req.onload = () => {
       if (req.status === 200) {
         resolve(req.responseText);
       } else {
@@ -20,8 +20,8 @@ var getJSON = ((url) => {
       }
     };
 
-    req.onerror = function () {
-      reject("network error");
+    req.onerror = () => {
+      reject("Network error");
     };
 
     req.open("GET", url);
@@ -33,15 +33,16 @@ app.get("/", (req, res) => {
   getJSON
     .then((data) => {
       fs.writeFileSync("JSON.txt", data);
-      console.log("JSON data saved to file");
-      res.send("JSON data saved to file");
+      const successMessage = "JSON data saved to file";
+      console.log(successMessage);
+      res.send(successMessage);
     })
     .catch((err) => {
-      console.log(err);
-      res.send(err);
+      console.error(err);
+      res.status(500).send("Error retrieving JSON data: " + err);
     });
 });
 
 app.listen(port, () => {
-  console.log(`app running on port ${port}`);
+  console.log(`App running on port ${port}`);
 });
